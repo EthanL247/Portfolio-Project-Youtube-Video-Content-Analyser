@@ -1,6 +1,5 @@
 """ YOUTUBE API Data Retrieval 
 Creator: Ethan Liu
-Last Updated: 27/07/23
 """
 from googleapiclient.discovery import build
 from youtube_transcript_api import YouTubeTranscriptApi as ytt

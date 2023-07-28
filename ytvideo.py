@@ -1,7 +1,6 @@
 """ 
 For retrieving video data
 Creator: Ethan Liu
-Last Updated: 27/07
 """
 from ytchannel import Ytchannel
 
