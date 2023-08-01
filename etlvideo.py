@@ -72,6 +72,3 @@ class Etl(Ytvideo):
         
         return df 
 
-e = Etl()
-df = e.format_df(cid,'captions.json',True)
-print(df.info())

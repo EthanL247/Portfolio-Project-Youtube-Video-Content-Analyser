@@ -46,7 +46,3 @@ class Ytvideo(Ytchannel):
         return d
 
 
-# cid = 'UCVjlpEjEY9GpksqbEesJnNA'  
-# e = Ytvideo()
-# v = e.get_vinfo(cid)
-# print(v['Views'])

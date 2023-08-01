@@ -44,5 +44,3 @@ class Scribe(Ytvideo):
             json.dump(captions,outfile)
         return print(f"Checking File Existence: {os.path.isfile('captions.json')}")
 
-e = Scribe()
-e.save_captions(cid,50)
