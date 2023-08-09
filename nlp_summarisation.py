@@ -6,9 +6,13 @@ Creator: Ethan Liu
 from scribe import Scribe
 from transformers import pipeline
 import pandas as pd
+import torch
+import json
+import os
 
 
-class Summarise:
+
+class Summariser:
     """ class for summarising video captions """
     
     def __init__(self)-> None:
@@ -26,16 +30,39 @@ class Summarise:
         else:
             print('Data source not supported')
             
-    def summarise(self,df: pd.DataFrame) -> pd.DataFrame:
-        summariser = pipeline(self.task,model=self.model)
-        data = df[0]
-        res = summariser(data,max_length=130,min_length=30)
+            
+    def prep_model(self) -> object:
+        """ creates longt5 model object """
+        summariser = pipeline(
+            'summarization',
+            'pszemraj/long-t5-tglobal-base-16384-book-summary',
+            device=0 if torch.cuda.is_available() else -1,
+        )
+        return summariser 
+        
+            
+    def summarise(self,data: pd.DataFrame, limit: int) -> dict[int:list]:
+        """ performs the summarisation """
+        res = {'Summarised_Captions':[]}
+        summariser = self.prep_model()
+        if limit == 0:
+            n = len(data)
+        else:
+            n = limit
+        for i in range(n):
+            s = summariser(data[i])
+            res['Summarised_Captions'].append(s)
+            
+        # save to json
+        with open('summarised_captions.json','w') as j:
+            json.dump(res,j)
+        print(os.isfile('summarised_captions.json'))
+        
         return res 
-        
-        
-        
-        
     
-e = Summarise()
+          
+    
+e = Summariser()
 data = e.prepdata('df.csv')
-print(data)
+summarised = e.summarise(data,1)
+
