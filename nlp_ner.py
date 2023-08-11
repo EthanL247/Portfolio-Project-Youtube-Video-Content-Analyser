@@ -47,25 +47,14 @@ class NER:
         for i in range(n):
             nres = model(data[i])
             res['NER'].append(str(nres))
+            print(f"job: {i} /{n} done.")
+            
             
         # save nlp output as json
         self.savej(res)
         return res
-
-# e = NER()
-# e.ner('df.csv',1)
-
-with open('ner_results.json','r') as f:
-    data = json.load(f)
-
-print(type(data))
-print(data.keys())
-print(type(data['NER']))
-print(len(data['NER']))
-entry = data['NER']
-print(entry)
-d = entry[0]
-print(type(d))
-dlist = ast.literal_eval(d)
-print(type(dlist))
-print(type(dlist[0]))
+    
+    
+print('Hello World')
+e = NER()
+e.ner('df.csv',-1)
