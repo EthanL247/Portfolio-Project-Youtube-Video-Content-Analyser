@@ -3,24 +3,21 @@ Transcribing Youtube Videos
 Creator: Ethan Liu
 """
 from youtube_transcript_api import YouTubeTranscriptApi as ytta
-from ytvideo import Ytvideo
 import json
 import os
 
 
-cid = 'UCVjlpEjEY9GpksqbEesJnNA' 
 
-class Scribe(Ytvideo):
+class Transcribe:
     """ A class to acquire captions for videos """
     
-    def get_captions(self,channel_name: str,limit: int)->dict:
+    def get_captions(self,videos_infos: list[str],limit: int)->dict:
         """ Retrieve captions for videos """
-        ids = super().get_id(channel_name)
         res = {'ID':[],
                     'Captions':[],
                     'WordCount':[]
                     }
-        for i in ids[:limit]:
+        for i in videos_infos['ID'][:limit]:
             try: 
                 transcript = ytta.get_transcript(i)
                 t_str = ''

@@ -34,7 +34,7 @@ class NER:
             json.dump(data,f)
         return os.path.isfile('ner_results.json')
     
-    def ner(self,source: any, limit = int) -> dict[str:list]:
+    def ner(self,source: any, limit: int) -> dict[str:list]:
         """ performs NER """
         data = self.prepdata(source)
         model = self.prepmodel()
@@ -47,14 +47,11 @@ class NER:
         for i in range(n):
             nres = model(data[i])
             res['NER'].append(str(nres))
-            print(f"job: {i} /{n} done.")
+            print(f"job: {i+1} /{n} done.")
             
             
         # save nlp output as json
         self.savej(res)
         return res
     
-    
-print('Hello World')
-e = NER()
-e.ner('df.csv',-1)
+
