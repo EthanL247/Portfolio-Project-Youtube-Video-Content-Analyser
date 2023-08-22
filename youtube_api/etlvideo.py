@@ -1,23 +1,18 @@
 """
-Youtube Data ETL
-Creator: Ethan Liu
+ETL of caption and video info data
 """
-from ytvideo import Ytvideo
-from ytchannel import Ytchannel
 import pandas as pd
-from scribe import Scribe
 import json 
 import os
 
 cid = 'UCVjlpEjEY9GpksqbEesJnNA' 
 
-class Etl(Ytvideo):
+class Etl:
     """ A class to etl video data """
     
-    def get_vdf(self,channel_name: str) -> pd.DataFrame:
+    def get_vdf(self,video_info: dict) -> pd.DataFrame:
         """ ETL video data as dataframe """
-        data = super().get_vinfo(channel_name)
-        df = pd.DataFrame(data)
+        df = pd.DataFrame(video_info)
         return df
     
     def get_tdf(self,transcripts: dict[str:list]) -> pd.DataFrame:
@@ -33,9 +28,9 @@ class Etl(Ytvideo):
         except FileNotFoundError:
             print("Json File Not Found")
             
-    def transform_vdf(self,channel_name: str) -> pd.DataFrame:
-        """ Transform data type and add features in videos dataframe """ 
-        df = self.get_vdf(channel_name)
+    def transform_vdf(self,video_info: str) -> pd.DataFrame:
+        """ Transform data type and add features in videos info dataframe """ 
+        df = self.get_vdf(video_info)
         #change types 
         df = df.astype({'Title':'str','ID':'str','Duration':'str'})
         df[['Views','Likes','Comments']] = df[['Views','Likes','Comments']].apply(pd.to_numeric)
@@ -45,21 +40,23 @@ class Etl(Ytvideo):
         df['LikesPerComment'] = df['Likes']/df['Comments']
         return df
     
-    def transform_tdf(self,source: str) -> pd.DataFrame:
-        """ transform and add features in video transcript data frame """
+    def transform_tdf(self,source: any) -> pd.DataFrame:
+        """ transform and add features in video transcript dataframe """
         #tdf can be from json or dict 
-        if type(source) == dict:
+        if type(source) != str:
             df = self.get_tdf(source)
-        if '.json' in source:
-            df = self.get_jtdf(source)
         else:
-            return print('DataFrame Source Not Supported')
+            if '.json' in source and type(source) == str:
+                df = self.get_jtdf(source)
+            else:
+                return print('DataFrame Source Not Supported')
         #change data type
         df = df.astype({'WordCount':'int'})
         return df
     
-    def format_df(self,channel_name: str,source: str,save: bool) -> pd.DataFrame:
-        vdf = self.transform_vdf(channel_name)
+    def export_df(self,video_info: str,source: str,save: bool) -> pd.DataFrame:
+        """ combines video info and captions dataframe into one and saves as csv """
+        vdf = self.transform_vdf(video_info)
         tdf = self.transform_tdf(source)
         df = pd.concat([vdf,tdf],axis=1)
         
