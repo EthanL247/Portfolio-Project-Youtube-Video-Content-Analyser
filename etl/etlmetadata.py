@@ -7,8 +7,8 @@ import os
 
 cid = 'UCVjlpEjEY9GpksqbEesJnNA' 
 
-class Etl:
-    """ A class to etl video data """
+class EtlMetaData:
+    """ A class to etl all of the metadata of videos as well as their captions """
     
     def get_vdf(self,video_info: dict) -> pd.DataFrame:
         """ ETL video data as dataframe """
@@ -59,9 +59,6 @@ class Etl:
         vdf = self.transform_vdf(video_info)
         tdf = self.transform_tdf(source)
         df = pd.concat([vdf,tdf],axis=1)
-        
-        # drop all empty indexs due to restricted subtitles 
-        df.dropna(inplace=True)
         
         if save == True:
             df.to_csv('df')
