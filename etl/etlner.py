@@ -24,7 +24,7 @@ class EtlNER:
         
         return res
     
-    def extract_features(self, data: list[dict]) -> list[dict]:
+    def extract_features(self, data: list[dict]) -> dict[dict[list]]:
         """ Extracts I-PER,I-ORG,I-LOC and their scores from results """
         res = {
             'PER':[],

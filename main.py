@@ -3,13 +3,17 @@ from youtube_api.ytvideo import Ytvideo
 from nlp.nlp_ner import NER
 from etl.etlner import EtlNER
 from youtube_api.transcribe import Transcribe
+from nlp.nlp_sa import SA
+from etl.etlsa import EtlSA
 
 #initialising
 channel_manage = Ytchannel()
 video_manage = Ytvideo()
-nlp_manage = NER()
+nlp_ner = NER()
+nlp_sa = SA()
 etlner_manage = EtlNER()
 scribe_manage = Transcribe()
+etlsa_mange = EtlSA()
 id = 'UCVjlpEjEY9GpksqbEesJnNA'
 
 
@@ -17,9 +21,5 @@ id = 'UCVjlpEjEY9GpksqbEesJnNA'
 video_location = channel_manage.get_videos(id)
 videos_info = video_manage.export_info(video_location)
 videos_captions = scribe_manage.get_captions(videos_info,1)
-ner_raw = nlp_manage.ner(videos_captions,1)
-ner_data = etlner_manage.direct_etl(ner_raw)
-print(ner_data['PER'])
-print(ner_data['ORG'])
-print(ner_data['LOC'])
-print(ner_data['MSC'])
+saraw = nlp_sa.sa(videos_captions,1)
+sares = etlsa_mange.direct_etl(saraw)
