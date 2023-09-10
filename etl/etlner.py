@@ -54,7 +54,7 @@ class EtlNER:
             if res[key] == []:
                 res[key] = None
             else:
-                res[key] = set(res[key])
+                res[key] = list(set(res[key]))
         
         return res
     

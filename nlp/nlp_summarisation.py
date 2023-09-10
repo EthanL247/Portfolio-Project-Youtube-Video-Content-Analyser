@@ -38,9 +38,15 @@ class Summariser:
             device=0 if torch.cuda.is_available() else -1,
         )
         return summariser 
+    
+    def save(self, data:dict[list]) -> None:
+        """ saves NER output as json """
+        with open('sum_results.json','w') as f:
+            json.dump(data,f)
+        return os.path.isfile('ner_results.json')
         
             
-    def summarise(self,source: any, limit: int) -> dict[int:list]:
+    def summarise(self,source: any, limit: int,save=False) -> dict[int:list]:
         """ performs the summarisation """
         res = {'Summarised_Captions':[]}
         data = self.prepdata(source)
@@ -53,32 +59,12 @@ class Summariser:
             s = summariser(data[i])
             res['Summarised_Captions'].append(s)
             print(f"job {i} done.")
-            
-        # save to json
-        with open('summarised_captions.json','w') as j:
-            json.dump(res,j)
+        
+        if save == True:
+            self.save(res)
         
         return res 
     
-    def merge(self,main: str, summarised: str) -> pd.DataFrame:
-        """ Merges captions with main dataframe """ 
-        #local merge
-        if type(main) == str and type(summarised) == str:
-            main_df = pd.read_csv(main)
-            summarised_df = pd.read_json(summarised)
-            main = pd.concat([main_df,summarised_df],axis=1)
-            # drop not needed features 
-            main.drop([main.columns[0],'ID.1'],inplace=True,axis=1)
-            return main 
-        
-        #adhoc merge 
-        if type(main) == pd.Dataframe and type(summarised) == pd.Dataframe:
-            main = pd.concat([main,summarised],axis=1)
-            # drop not needed features 
-            main.drop([main.columns[0],'ID.1'],inplace=True,axis=1)
-            return main 
-        else:
-            print('Merge source not supported')
     
     
 

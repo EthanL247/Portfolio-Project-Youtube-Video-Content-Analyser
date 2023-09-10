@@ -6,6 +6,7 @@ class EtlDF:
     """ A class to carry convert data into dataframe """
     
     def meta_dataframe(self, metadata: dict[dict[list]]) -> pd.DataFrame:
+        """ converts video metadata to dataframe """
         df = pd.DataFrame(metadata)
         
         #convert types 
@@ -15,8 +16,28 @@ class EtlDF:
         df['LikesPerView'] = df['Likes']/df['Views']
         df['CommentsPerView'] = df['Comments']/df['Views']
         df['LikesPerComment'] = df['Likes']/df['Comments']
-        0
-        return df 
         
+        return df 
     
+    def ner_dataframe(self, ner: dict[dict[list]]) -> list[pd.DataFrame]:
+        """ converts  etl ner results to dataframe """
+        res = []
+        for key,value in ner.items():
+            # populate empty data with None 
+            if ner[key] == []:
+                data = [None]
+                df = pd.Series(data,name=key)
+            else:
+                df = pd.Series(ner[key],name=key,dtype=str)
+            res.append(df)
+        return res
     
+    def sa_dataframe(self, sa: dict[dict[list]]) -> pd.DataFrame:
+        """ converts etl sa results to dataframe """
+        df = pd.DataFrame(sa, columns=sa.keys(), dtype=float)
+        return df 
+    
+    def sum_dataframe(self, transcript: dict[dict[list]]) -> pd.DataFrame:
+        """ converts etl captions results to dataframe """
+        df = pd.DataFrame(transcript, columns = transcript.keys(), dtype=str)
+        return df 
