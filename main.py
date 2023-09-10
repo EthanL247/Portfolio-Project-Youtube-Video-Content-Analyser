@@ -5,6 +5,8 @@ from etl.etlner import EtlNER
 from youtube_api.transcribe import Transcribe
 from nlp.nlp_sa import SA
 from etl.etlsa import EtlSA
+from etl.database_manager import DataManager as dm
+import pandas as pd
 
 #initialising
 channel_manage = Ytchannel()
@@ -14,12 +16,10 @@ nlp_sa = SA()
 etlner_manage = EtlNER()
 scribe_manage = Transcribe()
 etlsa_mange = EtlSA()
+db_manage = dm()
 id = 'UCVjlpEjEY9GpksqbEesJnNA'
 
 
 #testing
-video_location = channel_manage.get_videos(id)
-videos_info = video_manage.export_info(video_location)
-videos_captions = scribe_manage.get_captions(videos_info,1)
-saraw = nlp_sa.sa(videos_captions,1)
-sares = etlsa_mange.direct_etl(saraw)
+df = pd.read_csv('data/uncle_roger_df.csv')
+ner = nlp_ner.ner(df,-1,save=True)

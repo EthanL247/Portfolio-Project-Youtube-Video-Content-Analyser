@@ -17,7 +17,6 @@ class NER:
         res = data['Captions']
         return res 
         
-        
     
     def prepmodel(self) -> object:
         """ creates model object """ 
