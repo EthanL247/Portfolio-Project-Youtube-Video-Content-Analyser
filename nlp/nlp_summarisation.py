@@ -20,14 +20,10 @@ class Summariser:
         self.model = 'facebook/bart-large-cnn'
         
     
-    def prepdata(self,source: any) ->dict[str:str]:
+    def prepdata(self,data: any) ->dict[str:str]:
         """ Prepares data to be summarised"""
-        if type(source) == str:
-            return pd.read_csv(source)['Captions']
-        elif type(source) == pd.DataFrame:
-            return source['Captions']
-        else:
-            print('Data source not supported')
+        res = data['Captions']
+        return res 
             
             
     def prep_model(self) -> object:
@@ -55,10 +51,14 @@ class Summariser:
             n = len(data)
         else:
             n = limit
+            
         for i in range(n):
-            s = summariser(data[i])
+            if data[i] != []:
+                s = summariser(data[i])
+            else:
+                s = None
             res['Summarised_Captions'].append(s)
-            print(f"job {i} done.")
+            print(f"job {i+1} / {i+1} done.")
         
         if save == True:
             self.save(res)
