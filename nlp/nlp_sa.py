@@ -6,17 +6,15 @@ import pandas as pd
 import json
 import os 
 
-class SentimentAnalysis:
+class SA:
     """ a class for performing SamLowe/roberta-base-go_emotions sentiment analysis """
     
-    def prepdata(self,source: any) ->dict[str:str]:
+
+    def prepdata(self,data: dict[dict[list]]) -> list[str]:
         """ Prepares data to be summarised"""
-        if type(source) == str:
-            return pd.read_csv(source)['Captions']
-        elif type(source) == pd.DataFrame:
-            return source['Captions']
-        else:
-            print('Data source not supported')
+        res = data['Captions']
+        return res 
+            
     
     def prepmodel(self) -> object:
         """ creates model object """ 
@@ -32,9 +30,9 @@ class SentimentAnalysis:
         return os.path.isfile('sa_results.json')
     
     
-    def sa(self,source: any, limit: int) -> dict:
-        """ performs sentiment analysis """ 
-        data = self.prepdata(source)
+    def sa(self,source: dict, limit: int, save=False)-> dict:
+        """ performs sentiment analysis """
+        data = self.prepdata(source) 
         model = self.prepmodel()
         res = {'SA':[]}
         if limit == -1:
@@ -47,7 +45,9 @@ class SentimentAnalysis:
             res['SA'].append(str(sares))
             print(f"job: {i+1} /{n} done.")
         
-        self.savej(res)
+        if save == True:
+            self.savej(res)
+            
         return res 
         
         

@@ -12,20 +12,17 @@ import ast
 
 class NER:
     """ A class for performing Bert-Base Named Entity Recognition """
-    def prepdata(self,source: any) ->dict[str:str]:
+    def prepdata(self,data: dict[dict[list]]) -> list[str]:
         """ Prepares data to be summarised"""
-        if type(source) == str:
-            return pd.read_csv(source)['Captions']
-        elif type(source) == pd.DataFrame:
-            return source['Captions']
-        else:
-            print('Data source not supported')
+        res = data['Captions']
+        return res 
+        
     
     def prepmodel(self) -> object:
         """ creates model object """ 
         tokenizer = AutoTokenizer.from_pretrained("dslim/bert-base-NER")
         model = AutoModelForTokenClassification.from_pretrained("dslim/bert-base-NER")
-        nlp = pipeline('ner',model=model, tokenizer=tokenizer)
+        nlp = pipeline('ner',model=model, tokenizer=tokenizer, aggregation_strategy="simple")
         return nlp
     
     def savej(self,data: any) -> None:
@@ -34,7 +31,7 @@ class NER:
             json.dump(data,f)
         return os.path.isfile('ner_results.json')
     
-    def ner(self,source: any, limit: int) -> dict[str:list]:
+    def ner(self,source: any, limit: int, save=False) -> dict[str:list]:
         """ performs NER """
         data = self.prepdata(source)
         model = self.prepmodel()
@@ -49,9 +46,8 @@ class NER:
             res['NER'].append(str(nres))
             print(f"job: {i+1} /{n} done.")
             
-            
-        # save nlp output as json
-        self.savej(res)
+        if save == True:  
+            self.savej(res)
         return res
     
 

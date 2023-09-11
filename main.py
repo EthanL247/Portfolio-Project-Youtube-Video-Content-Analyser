@@ -1,19 +1,25 @@
 from youtube_api.ytchannel import Ytchannel
 from youtube_api.ytvideo import Ytvideo
+from nlp.nlp_ner import NER
+from etl.etlner import EtlNER
 from youtube_api.transcribe import Transcribe
-from youtube_api.etlvideo import Etl
+from nlp.nlp_sa import SA
+from etl.etlsa import EtlSA
+from etl.database_manager import DataManager as dm
+import pandas as pd
 
-c_object = Ytchannel()
-v_object = Ytvideo()
-transcribe = Transcribe()
-etl = Etl()
+#initialising
+channel_manage = Ytchannel()
+video_manage = Ytvideo()
+nlp_ner = NER()
+nlp_sa = SA()
+etlner_manage = EtlNER()
+scribe_manage = Transcribe()
+etlsa_mange = EtlSA()
+db_manage = dm()
+id = 'UCVjlpEjEY9GpksqbEesJnNA'
 
 
-videos = c_object.get_videos('UChBEbMKI1eCcejTtmI32UEw')
-vinfo = v_object.export_info(videos)
-captions = transcribe.get_captions(vinfo,2)
-
-vdf = etl.transform_vdf(vinfo).iloc[:2]
-jdf = etl.transform_tdf(captions)
-
-df = etl.export_df(vinfo,captions,False)
+#testing
+df = pd.read_csv('data/uncle_roger_df.csv')
+ner = nlp_ner.ner(df,-1,save=True)

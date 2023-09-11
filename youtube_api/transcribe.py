@@ -31,6 +31,7 @@ class Transcribe:
                 res['WordCount'].append(0)
             else:
                 res['WordCount'].append(len(t_str))
+
               
         return res
     
